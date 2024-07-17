@@ -16,6 +16,7 @@ R_INITIAL = 12.0
 DEFAULT_AIR_DENSITY = 0.0294  # g/cm^2
 ACQUISITION_TIME = 1.0
 DEFAULT_V = 1.0  # Default speed of the detector
+DEFAULT_BRANCHING_RATIO = 0.8519  # Constant default branching ratio
 
 
 # Define a function to adjust the background count rate
@@ -29,7 +30,7 @@ def adjust_background_count_rate(background_count_rate, alarm_threshold_factor=1
 
 # Define the calculate_immobile_MDD function
 def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
-    Pdesired, activity, branching_ratio, air_density, v, acquisition_time, background_count_rate = params
+    Pdesired, activity, air_density, v, acquisition_time, background_count_rate = params
     adjusted_background_count_rate = adjust_background_count_rate(background_count_rate)
 
     R_min = 0
@@ -40,7 +41,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
     while (R_max - R_min) > tolerance:
         R_fix = (R_min + R_max) / 2
         current_params = (
-            Pdesired, DEFAULT_ACTIVITY, branching_ratio, air_density, v, acquisition_time, adjusted_background_count_rate,
+            Pdesired, DEFAULT_ACTIVITY, DEFAULT_BRANCHING_RATIO, air_density, v, acquisition_time, adjusted_background_count_rate,
             ALARM_LEVEL, R_fix)
 
         angles_rad = np.deg2rad(angles)
@@ -61,7 +62,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
         if rel_eff.shape != (angles_rad.shape[0], 1):
             raise ValueError(f"Unexpected shape for rel_eff: {rel_eff.shape}, expected {(angles_rad.shape[0], 1)}")
 
-        fluence_rate = DEFAULT_ACTIVITY * branching_ratio * rel_eff
+        fluence_rate = DEFAULT_ACTIVITY * DEFAULT_BRANCHING_RATIO * rel_eff
         detection_probability = 1 - tf.math.exp(-fluence_rate * R_fix * air_density / adjusted_background_count_rate)
         mean_detection_probability = tf.reduce_mean(detection_probability).numpy()
 
@@ -78,7 +79,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
 
 # Define the calculate_mobile_MDD function
 def calculate_mobile_MDD(model, angles, params, tolerance=1e-3):
-    Pdesired, activity, branching_ratio, air_density, v, acquisition_time, background_count_rate = params
+    Pdesired, activity, air_density, v, acquisition_time, background_count_rate = params
     adjusted_background_count_rate = adjust_background_count_rate(background_count_rate)
 
     R_min = 0
@@ -113,7 +114,7 @@ def calculate_mobile_MDD(model, angles, params, tolerance=1e-3):
             if rel_eff.shape != (angles_rad.shape[0], 1):
                 raise ValueError(f"Unexpected shape for rel_eff: {rel_eff.shape}, expected {(angles_rad.shape[0], 1)}")
 
-            fluence_rate = DEFAULT_ACTIVITY * branching_ratio * rel_eff
+            fluence_rate = DEFAULT_ACTIVITY * DEFAULT_BRANCHING_RATIO * rel_eff
             detection_prob = 1 - tf.math.exp(-fluence_rate * R_test * air_density / adjusted_background_count_rate)
             total_detection_prob += detection_prob
             distance_traveled += current_distance_per_step
@@ -142,7 +143,7 @@ def calculate_mdd(model, angles, params, is_mobile, tolerance):
         return calculate_immobile_MDD(model, angles, params, tolerance)
 
 # Streamlit UI
-st.title("Maximum Detectable Distance of Gamma Rays Detectors")
+st.title("Maximum Detectable Distance (MDD) Calculator")
 
 Pdesired = st.slider("Desired Detection Probability", 0.0, 1.0, 0.95)
 angles_input = st.text_input("Angles (comma separated)", "0, 10, 20, 30")
@@ -159,14 +160,11 @@ with col1:
     else:
         v = DEFAULT_V
 
-with col2:
-    branching_ratio = st.number_input("Branching Ratio", value=0.8519)
-
 tolerance = 1e-3
 
 # Prepare the parameters
 angles = [float(angle) for angle in angles_input.split(",")]
-params = (Pdesired, 26000, branching_ratio, 0.0294, v, 1.0, background_count_rate)
+params = (Pdesired, 26000, 0.0294, v, 1.0, background_count_rate)
 
 # Load the model
 model_path = 'my_model.tf'  #  path to model directory
