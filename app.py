@@ -14,7 +14,7 @@ def load_model(model_path):
 MASS_ATTENUATION_COEFF = 0.02  # cm^2/g
 R_INITIAL = 12.0
 DEFAULT_AIR_DENSITY = 0.0294  # g/cm^2
-ACQUISITION_TIME = 1.0
+ACQUISITION_TIME = 3.0
 DEFAULT_V = 1.0  # Default speed of the detector
 DEFAULT_BRANCHING_RATIO = 0.8519  # Constant default branching ratio
 
