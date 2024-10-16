@@ -15,7 +15,7 @@ MASS_ATTENUATION_COEFF = 0.02  # cm^2/g
 R_INITIAL = 12.0
 DEFAULT_AIR_DENSITY = 0.0294  # g/cm^2
 ACQUISITION_TIME = 1.0
-DEFAULT_V = 1.0  # Default speed of the detector
+DEFAULT_V = 13.8888889 #1.0  # Default speed of the detector
 DEFAULT_BRANCHING_RATIO = 0.8519  # Constant default branching ratio
 
 
@@ -36,7 +36,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
     R_min = 0
     R_max = 10000
     ALARM_LEVEL = 1.0
-    DEFAULT_ACTIVITY = 270270270.27
+    DEFAULT_ACTIVITY = 2600
 
     while (R_max - R_min) > tolerance:
         R_fix = (R_min + R_max) / 2
