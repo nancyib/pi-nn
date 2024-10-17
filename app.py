@@ -20,11 +20,11 @@ DEFAULT_BRANCHING_RATIO = 0.8519  # Constant default branching ratio
 background_count_rate = 4757  # float(gdf['BKGD'].values[0]) #added
 bkgd_std = np.std(gdf['BKGD'])  # Background standard deviation #added
 alarm_level_factor = 3  # 2 for a more sensitive alarm, 3-4 for less sensitive #added
-alarm_level = np.mean(gdf['BKGD']) + alarm_level_factor * bkgd_std  # float(gdf['a_level'].values[0]) #added
+ALARM_LEVEL = np.mean(gdf['BKGD']) + alarm_level_factor * bkgd_std  # float(gdf['a_level'].values[0]) #added
 
 
 # Define a function to adjust the background count rate
-def adjust_background_count_rate(background_count_rate, alarm_threshold=alarm_level): #alarm_threshold_factor=1.5
+def adjust_background_count_rate(background_count_rate, alarm_threshold=ALARM_LEVEL): #alarm_threshold_factor=1.5
     min_rate = 0.0
     max_rate = 8000.0
     scaled_background_count_rate = min(max(min_rate, background_count_rate), max_rate)
@@ -39,7 +39,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
 
     R_min = 0
     R_max = 10000
-    ALARM_LEVEL = 1.0
+    #ALARM_LEVEL = 1.0
     DEFAULT_ACTIVITY = 2600
 
     while (R_max - R_min) > tolerance:
