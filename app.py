@@ -17,14 +17,18 @@ DEFAULT_AIR_DENSITY = 0.0294  # g/cm^2
 ACQUISITION_TIME = 1.0
 DEFAULT_V = 1.0  # Default speed of the detector
 DEFAULT_BRANCHING_RATIO = 0.8519  # Constant default branching ratio
+background_count_rate = 4757  # float(gdf['BKGD'].values[0]) #added
+bkgd_std = np.std(gdf['BKGD'])  # Background standard deviation #added
+alarm_level_factor = 3  # 2 for a more sensitive alarm, 3-4 for less sensitive #added
+alarm_level = np.mean(gdf['BKGD']) + alarm_level_factor * bkgd_std  # float(gdf['a_level'].values[0]) #added
 
 
 # Define a function to adjust the background count rate
-def adjust_background_count_rate(background_count_rate, alarm_threshold_factor=1.5):
+def adjust_background_count_rate(background_count_rate, alarm_threshold=alarm_level): #alarm_threshold_factor=1.5
     min_rate = 0.0
     max_rate = 8000.0
     scaled_background_count_rate = min(max(min_rate, background_count_rate), max_rate)
-    adjusted_background_count_rate = scaled_background_count_rate * alarm_threshold_factor
+    adjusted_background_count_rate = scaled_background_count_rate * alarm_threshold #alarm_threshold_factor
     return adjusted_background_count_rate
 
 
