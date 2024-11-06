@@ -146,13 +146,13 @@ def calculate_mdd(model, angles, params, is_mobile, tolerance):
 st.title("Maximum Detectable Distance (MDD) Calculator")
 
 Pdesired = st.slider("Desired Detection Probability", 0.0, 1.0, 0.95)
-angles_input = st.text_input("Angles (comma separated)", "0, 10, 20, 30")
+angles_input = st.text_input("Angles (comma separated)") #"0, 10, 20, 30"
 
 # Input fields for the parameters
 col1, col2 = st.columns(2)
 
 with col1:
-    background_count_rate = st.number_input("Background Count Rate (CPM)", value=600)
+    background_count_rate = st.number_input("Background Count Rate (CPM)")#value=600
     is_mobile = st.checkbox("Is the detector mobile?")
 
     if is_mobile:
