@@ -35,7 +35,7 @@ def calculate_immobile_MDD(model, angles, params, tolerance=1e-3):
 
     R_min = 0
     R_max = 10000
-    #ALARM_LEVEL = 1.0
+    ALARM_LEVEL = 1.0
     DEFAULT_ACTIVITY = 2600
 
     while (R_max - R_min) > tolerance:
