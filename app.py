@@ -174,6 +174,7 @@ model = load_model(model_path)
 if st.button("Calculate MDD"):
     try:
         MDD = calculate_mdd(model, angles, params, is_mobile, tolerance)
-        st.write(f"Maximum Detectable Distance (MDD): {MDD:.2f} inches")
+        mdd_mobile_meters = MDD / 39.37
+        st.write(f"Maximum Detectable Distance (MDD): {MDD:.2f} meters")
     except ValueError as ve:
         st.error(str(ve))
